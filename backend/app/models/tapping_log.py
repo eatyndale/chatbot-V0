@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 from pydantic import BaseModel, Field, conint, constr
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, Index
 from sqlalchemy.dialects.postgresql import UUID
 from app.database import Base
 from typing import Annotated
@@ -48,3 +48,30 @@ class TappingFeedbackResponse(BaseModel):
     updated_tapping_points: dict[str, str] | None = None
     rounds_completed: int
     max_rounds_reached: bool
+
+class TappingSessionLog(Base):
+    __tablename__ = "tapping_session_logs"
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    problem = Column(String, nullable=False)
+    before_intensity = Column(Integer, nullable=False)
+    after_intensity = Column(Integer, nullable=False)
+    timestamp = Column(DateTime, default=datetime.utcnow, index=True)
+    duration_minutes = Column(Integer, nullable=False)
+    number_of_rounds = Column(Integer)
+
+    __table_args__ = (
+        Index('ix_tapping_session_logs_user_id', 'user_id'),
+        Index('ix_tapping_session_logs_timestamp', 'timestamp'),
+    )
+
+class TappingSessionLogResponse(BaseModel):
+    problem: str
+    before_intensity: int
+    after_intensity: int
+    timestamp: datetime
+    duration_minutes: int
+    number_of_rounds: int | None = None
+
+class TappingSessionLogListResponse(BaseModel):
+    sessions: list[TappingSessionLogResponse]

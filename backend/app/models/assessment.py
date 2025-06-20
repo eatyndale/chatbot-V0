@@ -1,19 +1,26 @@
 import uuid
 from datetime import datetime
-from pydantic import BaseModel, conlist, validator
+from typing import Annotated
+from pydantic import BaseModel, Field
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, ARRAY
 from sqlalchemy.dialects.postgresql import UUID
 from app.database import Base
 
 # Pydantic schema for the assessment request payload
 class AssessmentRequest(BaseModel):
-    responses: conlist(int, min_length=9, max_length=9)
+    responses: Annotated[list[int], Field(min_length=9, max_length=9)]
 
-    @validator('responses', each_item=True)
-    def check_response_values(cls, v):
-        if not 0 <= v <= 3:
-            raise ValueError('Response values must be between 0 and 3')
-        return v
+    @classmethod
+    def __get_validators__(cls):
+        yield from super().__get_validators__()
+        yield cls.validate_responses
+
+    @staticmethod
+    def validate_responses(values):
+        for v in values:
+            if not 0 <= v <= 3:
+                raise ValueError('Response values must be between 0 and 3')
+        return values
 
 # Pydantic schema for the assessment response
 class AssessmentResponse(BaseModel):
