@@ -1,0 +1,9 @@
+# Environments
+.env
+.env*.local
+.env*.production
+.env*.development
+
+# Dependencies
+node_modules/
+/backend/venv/ 
