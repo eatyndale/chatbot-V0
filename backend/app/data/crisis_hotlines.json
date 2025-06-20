@@ -1,0 +1,10 @@
+{
+  "hotlines": [
+    { "country": "USA", "number": "1-800-273-8255", "service": "National Suicide Prevention Lifeline" },
+    { "country": "UK", "number": "116 123", "service": "Samaritans" },
+    { "country": "Canada", "number": "1-833-456-4566", "service": "Canada Suicide Prevention Service" },
+    { "country": "Australia", "number": "13 11 14", "service": "Lifeline Australia" },
+    { "country": "India", "number": "+91-9152987821", "service": "Snehi India" },
+    { "country": "International", "number": "https://www.befrienders.org/", "service": "Befrienders Worldwide" }
+  ]
+}
